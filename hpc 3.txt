@@ -1,0 +1,68 @@
+Experiment 03: 
+Write a program in C to multiply two matrices of size 10000 x 10000 each and find
+it's execution-time using &quot;time&quot; command. Try to run this program on two or more
+machines having different configurations and compare execution-times obtained in
+each run. Comment on which factors affect the performance of the program.
+
+Code:
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include<conio.h>
+void test(int r1, int c1, int r2, int c2) {
+    int i, j, k;
+
+    double(*a)[r1][c1] = (double *)malloc (sizeof *a);
+    double(*b)[r2][c2] = (double *)malloc (sizeof *b);
+    double(*result)[r1][c2] =(double *) malloc (sizeof *result);
+
+    for (i = 0; i < r1; ++i) {
+        for (j = 0; j < c1; ++j) {
+            (*a)[i][j] = rand() / (double)RAND_MAX;
+        }
+    }
+    
+    for (i = 0; i < r2; ++i) {
+        for (j = 0; j < c2; ++j) {
+            (*b)[i][j] = rand() / (double)RAND_MAX;
+        }
+    }
+    
+    for (i = 0; i < r1; ++i) {
+        for (j = 0; j < c2; ++j) {
+            (*result)[i][j] = 0;
+        }
+    }
+    clock_t begin1 = clock();
+   
+    for (i = 0; i < r1; ++i) {
+        for (k = 0; k < c1; ++k) {
+            for (j = 0; j < c2; ++j) {
+                (*result)[i][j] += (*a)[i][k] * (*b)[k][j];
+            }
+        }
+    }
+    clock_t end1 = clock();
+    double time_taken = (double)(end1 - begin1) / CLOCKS_PER_SEC;
+    printf("M(%d,%d) x M(%d,%d) took %f seconds to execute\n",
+           r1, c1, r2, c2, time_taken);
+    free(a);
+    free(b);
+    free(result);
+}
+
+int main() {
+    test(100, 100, 100, 100);
+    test(1000, 1000, 1000, 1000);
+    test(2000, 2000, 2000, 2000);
+    test(3000, 3000, 3000, 3000);
+    test(4000, 4000, 4000, 4000);
+    return 0;
+}
+
+Output :
+
+M(100,100) x M(100,100) took 0.006348 seconds to execute
+M(1000,1000) x M(1000,1000) took 5.607478 seconds to execute
+M(2000,2000) x M(2000,2000) took 32.418798 seconds to execute
+
